@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Post, Req, Res} from '@nestjs/common';
+import { Body, Controller, Get, HttpException, Post, Req, Res } from '@nestjs/common';
 import {ApiOperation, ApiResponse, ApiTags} from '@nestjs/swagger';
 import {AuthService} from './auth.service';
 import {UserLoginDto} from './dto/user-login.dto';
@@ -17,7 +17,7 @@ export class AuthController {
   async login(@Body()data: UserLoginDto, @Res({passthrough: true})res) {
     const response = await this.authService.login(data);
     res.cookie('refreshToken', response.refresh_token, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true});
-    return response
+    return response.access_token
   }
 
   @ApiOperation({summary: 'registration пользователя'})
@@ -26,7 +26,7 @@ export class AuthController {
   async registration(@Body()data: UserRegistrationDto, @Res({passthrough: true})res) {
     const response = await this.authService.registration(data);
     res.cookie('refreshToken', response.refresh_token, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true});
-    return response;
+    return response.access_token;
   }
 
   @ApiOperation({summary: 'refresh пользователя'})
@@ -39,20 +39,18 @@ export class AuthController {
     return res.access_token;
   }
 
-  @ApiOperation({summary: 'refresh for flutter'})
-  @ApiResponse({status: 201})
-  @Post('refresh')
-  async AzimRefresh(@Body('refresh_token')refreshToken: string,@Body('push_token')push_token: string, @Res({passthrough: true})response) {
-    const res = await this.authService.refresh(refreshToken);
-    response.cookie('refreshToken', response.refresh_token, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true});
-    return res;
-  }
 
   @ApiOperation({summary: 'logout пользователя'})
   @ApiResponse({status: 201})
   @Get('logout')
   async logout(@Req()request, @Res({passthrough: true})response) {
-    const {refreshToken} = request.cookies;
+    if(!request?.cookies?.refreshToken){
+      throw new HttpException("нет токена",401)
+    }
+    const {refreshToken} = request?.cookies;
+    if(!refreshToken){
+      throw new HttpException("нет токена",401)
+    }
     response.clearCookie('refresh_token');
     await this.authService.logout(refreshToken);
   }

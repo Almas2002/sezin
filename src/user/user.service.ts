@@ -47,7 +47,7 @@ export class UserService {
     return {user, role};
   }
 
-  async getUserByEmail(phone: string) {
-    return this.userRepository.findOne({where:{phone},select: ['password', 'id', 'phone']});
+  async getUserByEmail(email: string) {
+    return this.userRepository.findOne({where:{email},select: ['password', 'id', 'email']});
   }
 }

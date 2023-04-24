@@ -6,7 +6,7 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
   @Column()
-  phone: string;
+  email: string;
   @Column({ select: false })
   password: string;
   @ManyToMany(() => Role, role => role.users)

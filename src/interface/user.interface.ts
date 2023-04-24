@@ -1,6 +1,6 @@
 export interface IUser {
   id:number;
-  phone:string;
+  email:string;
   roles:IRole[]
 }
 export interface IRole {
