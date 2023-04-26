@@ -4,7 +4,7 @@ import {Room} from "../../model/room/room.entity";
 import {Repository} from "typeorm";
 import {PageI} from "../../model/page.interface";
 import {User} from "../../../user/user.entity";
-import {Message} from "../../model/message/message.entity";
+
 
 @Injectable()
 export class RoomService {

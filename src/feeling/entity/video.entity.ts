@@ -1,0 +1,16 @@
+import { Feeling } from './feeling.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+
+@Entity()
+export class Video{
+  @PrimaryGeneratedColumn()
+  id:number;
+  @Column()
+  description:string;
+  @ManyToOne(()=>Feeling,feeling=>feeling)
+  feeling:Feeling;
+  @Column({name:"video_url"})
+  videoUrl:string;
+  @Column()
+  title:string;
+}
