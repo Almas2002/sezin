@@ -8,7 +8,6 @@ import { FileModule } from './file/file.module';
 import * as path from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { FeelingModule } from './feeling/feeling.module';
-import { TestQuestionModule } from './test/testQuestionModule';
 require('dotenv').config()
 
 @Module({
@@ -27,7 +26,7 @@ require('dotenv').config()
     ServeStaticModule.forRoot({
       rootPath: path.resolve(__dirname, 'static'),
     }),
-    UserModule, RoleModule, AuthModule, FileModule,FeelingModule,TestQuestionModule],
+    UserModule, RoleModule, AuthModule, FileModule,FeelingModule],
   controllers: [],
   providers: [],
 })

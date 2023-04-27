@@ -9,8 +9,6 @@ export class User {
   email: string;
   @Column({ select: false })
   password: string;
-  @Column({default:0})
-  score:number
   @ManyToMany(() => Role, role => role.users)
   roles: Role[];
 }
