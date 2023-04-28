@@ -19,4 +19,8 @@ export class ArticleService {
     const article = await this.articleRepository.save({ feeling, ...dto });
     return { id: article.id };
   }
+
+  async getAll(){
+    return this.articleRepository.find()
+  }
 }
