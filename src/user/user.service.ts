@@ -69,6 +69,6 @@ export class UserService {
   }
 
   async getUserId(id: number) {
-    return this.userRepository.findOne({ where: { id }, relations: ['roles','vebinars'] });
+    return this.userRepository.findOne({ where: { id }, relations: ['roles','vebinars','bothVebinars'] });
   }
 }

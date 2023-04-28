@@ -20,6 +20,6 @@ export class User {
   @OneToMany(()=>Vebinar,vebinar=>vebinar.user)
   vebinars:Vebinar[]
 
-  @ManyToMany(()=>Vebinar,vebinar=>vebinar)
+  @ManyToMany(()=>Vebinar,vebinar=>vebinar.customers)
   bothVebinars:Vebinar[]
 }
