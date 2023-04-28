@@ -15,7 +15,7 @@ export class UserService {
     if (!role) {
       role = await this.roleService.create({ description: `${rol} сайта`, value: rol });
     }
-    const user = await this.userRepository.save(dto);
+    const user = await this.userRepository.save({...dto});
     user.roles = [role];
     await this.userRepository.save(user);
     delete user.password;
