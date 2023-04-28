@@ -1,5 +1,6 @@
 import { Role } from '../role/role.entity';
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Vebinar } from '../vebinar/vebinar.entity';
 
 @Entity()
 export class User {
@@ -15,4 +16,10 @@ export class User {
   score:number
   @ManyToMany(() => Role, role => role.users)
   roles: Role[];
+
+  @OneToMany(()=>Vebinar,vebinar=>vebinar.user)
+  vebinars:Vebinar[]
+
+  @ManyToMany(()=>Vebinar,vebinar=>vebinar)
+  bothVebinars:Vebinar[]
 }

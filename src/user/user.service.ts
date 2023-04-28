@@ -15,7 +15,7 @@ export class UserService {
     if (!role) {
       role = await this.roleService.create({ description: `${rol} сайта`, value: rol });
     }
-    const user = await this.userRepository.save({...dto});
+    const user = await this.userRepository.save({ ...dto });
     user.roles = [role];
     await this.userRepository.save(user);
     delete user.password;
@@ -27,13 +27,24 @@ export class UserService {
   }
 
   async deleteRoleFromUser(dto: AddRoleDto) {
-    const {role, user} = await this.workWithRole(dto);
+    const { role, user } = await this.workWithRole(dto);
     const roles = user.roles.filter(e => e.value !== role.value);
     user.roles = [...roles];
     await this.userRepository.save(user);
     delete user.password;
     return user;
   }
+
+  async addRole(roleValue: string, userId: number) {
+    let role = await this.roleService.getRoleByValue(roleValue);
+    if (!role) {
+      role = await this.roleService.create({ description: `${role} сайта`, value: roleValue });
+    }
+    const user = await this.userRepository.findOne({ where: { id: userId }, relations: ['roles'] });
+    user.roles = [...user.roles, role];
+    await this.userRepository.save(user);
+  }
+
   async workWithRole(dto: AddRoleDto) {
     const user = await this.getUserByEmail(dto.email);
     const role = await this.roleService.getRoleByValue(dto.role);
@@ -44,18 +55,20 @@ export class UserService {
     if (user.roles.some(userRole => userRole.value == role.value)) {
       return;
     }
-    return {user, role};
+    return { user, role };
   }
 
   async getUserByEmail(email: string) {
-    return this.userRepository.findOne({where:{email},select: ['password', 'id', 'email']});
+    return this.userRepository.findOne({ where: { email }, select: ['password', 'id', 'email'] });
   }
+
   async updateScore(id: number, score: number) {
     const user = await this.userRepository.findOne({ where: { id } });
     user.score = score;
     await this.userRepository.save(user);
   }
+
   async getUserId(id: number) {
-    return this.userRepository.findOne({ where: { id }, relations: ['roles'] });
+    return this.userRepository.findOne({ where: { id }, relations: ['roles','vebinars'] });
   }
 }
