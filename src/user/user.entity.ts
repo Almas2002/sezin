@@ -17,6 +17,9 @@ export class User {
   @ManyToMany(() => Role, role => role.users)
   roles: Role[];
 
+  @Column({default:false})
+  isSubscriber:boolean
+
   @OneToMany(()=>Vebinar,vebinar=>vebinar.user)
   vebinars:Vebinar[]
 

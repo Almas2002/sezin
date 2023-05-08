@@ -21,17 +21,23 @@ export class UserController {
   async userMe(@UserDecorator('id')id: number) {
     return this.userService.getUserId(id);
   }
-  @Role("ADMIN")
+
+  @Role('ADMIN')
   @UseGuards(RoleGuards)
-  @Post("add-role")
-  addRole(@Body()dto:AddRoleDto){
-    return this.userService.addRoleWithEmail(dto.role,dto.email)
+  @Post('add-role')
+  addRole(@Body()dto: AddRoleDto) {
+    return this.userService.addRoleWithEmail(dto.role, dto.email);
   }
 
-  @Role("ADMIN")
+  @Role('ADMIN')
   @UseGuards(RoleGuards)
   @Get()
-  getUsers(){
-    return this.userService.getUsers()
+  getUsers() {
+    return this.userService.getUsers();
+  }
+
+  @Put('/buy')
+  async buy(@Body('email')email: string) {
+    return this.userService.buy(email);
   }
 }

@@ -80,6 +80,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
 
   @SubscribeMessage('join-room')
   async joinRoom(socket: Socket, id: { data: number }) {
+
     const messages = await this.messageService.getAllMessage(id.data, { limit: 10, offset: 0 });
     await this.jointedRoomService.create({ socketId: socket.id, roomId: id.data, user: socket.data.user });
     await this.server.to(socket.id).emit('messages', messages);
