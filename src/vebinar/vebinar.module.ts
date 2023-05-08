@@ -5,9 +5,10 @@ import { FileModule } from '../file/file.module';
 import { UserModule } from '../user/user.module';
 import { VebinarService } from './vebinar.service';
 import { VebinarController } from './vebinar.controller';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([Vebinar]),FileModule,UserModule],
+  imports:[TypeOrmModule.forFeature([Vebinar]),FileModule,UserModule,JwtModule],
   controllers:[VebinarController],
   providers:[VebinarService]
 })

@@ -34,7 +34,7 @@ export class AuthService {
     if (candidate) {
       throw new HttpException('такой пользователь уже существует', 400);
     }
-    let rol = admin ? 'SUPER-ADMIN' : 'USER';
+    let rol = admin ? 'ADMIN' : 'USER';
     const user = await this.userService.create({ ...data, password: hashPassword }, rol);
 
     const tokens = await this.generationToken(user);

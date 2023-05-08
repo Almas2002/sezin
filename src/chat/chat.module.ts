@@ -12,9 +12,10 @@ import {AuthModule} from "../auth/auth.module";
 import {UserModule} from "../user/user.module";
 import {JoinedRoom} from "./model/joined-room/joined-room.entity";
 import { ConnectedUser } from './model/connected-room/connected.user.entity';
+import { ChatController } from './chat.controller';
 
 @Module({
-    controllers: [],
+    controllers: [ChatController],
     providers:
         [
             ChatService,

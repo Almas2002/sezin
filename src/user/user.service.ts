@@ -44,7 +44,10 @@ export class UserService {
     user.roles = [...user.roles, role];
     await this.userRepository.save(user);
   }
-
+  async addRoleWithEmail(roleValue: string, email:string){
+    const user = await this.getUserByEmail(email)
+    await this.addRole(roleValue,user.id)
+  }
   async workWithRole(dto: AddRoleDto) {
     const user = await this.getUserByEmail(dto.email);
     const role = await this.roleService.getRoleByValue(dto.role);
@@ -70,5 +73,8 @@ export class UserService {
 
   async getUserId(id: number) {
     return this.userRepository.findOne({ where: { id }, relations: ['roles','vebinars','bothVebinars'] });
+  }
+  async getUsers(){
+    return this.userRepository.find({relations:["roles"]})
   }
 }

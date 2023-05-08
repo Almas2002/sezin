@@ -61,12 +61,12 @@ export class AuthController {
   async createSuperUser(@Res({passthrough: true})res) {
     const data = {
       fullName:"Almas",
-      email: process.env.ADMIN_PHONE,
-      password: process.env.ADMIN_PASSWORD,
+      email: "diana@gmail.com",
+      password: "12345",
     };
     const response = await this.authService.registration(data, true);
     res.cookie('refreshToken', response.refresh_token, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true});
-    return response;
+
   }
 
 }

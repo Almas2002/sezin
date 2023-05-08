@@ -19,10 +19,13 @@ export class JointedRoomService {
         return this.joinedRoomRepository.find({where:{user}})
     }
     async findByRoom(room:Room){
-        return this.joinedRoomRepository.find({where:{room}})
+        return this.joinedRoomRepository.find({where:{room:{id:room.id}}})
     }
     async deleteBySocketId(socketId:string){
         return this.joinedRoomRepository.delete({socketId})
+    }
+    async deleteJoinedUser(socketId:string,roomId:number){
+        return this.joinedRoomRepository.delete({socketId,room:{id:roomId}})
     }
     async deleteAll(){
         await this.joinedRoomRepository.createQueryBuilder().delete().execute()

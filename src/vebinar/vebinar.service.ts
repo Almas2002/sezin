@@ -14,7 +14,6 @@ export class VebinarService {
   async create(dto: CreateVebinarDto, image: any, userId: number): Promise<{ id: number }> {
     const fileName = await this.fileService.createFile(image);
     const vebinar = await this.vebinarRepository.save({ user: { id: userId }, image: fileName, title: dto.title });
-    await this.userService.addRole('MANAGER', userId);
     return { id: vebinar.id };
   }
 

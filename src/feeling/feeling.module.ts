@@ -13,9 +13,10 @@ import { FeelingController } from './controllers/feeling.controller';
 import { ArticleService } from './services/article.service';
 import { FeelingService } from './services/feeling.service';
 import { VideoService } from './services/video.service';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([Video,Article,Exercise,Feeling]),FileModule],
+  imports:[TypeOrmModule.forFeature([Video,Article,Exercise,Feeling]),FileModule,JwtModule],
   controllers:[ArticleController,VideoController,ExerciseController,FeelingController],
   providers:[ArticleService,ExerciseService,FeelingService,VideoService]
 })
