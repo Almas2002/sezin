@@ -35,6 +35,6 @@ export class TestService{
   }
 
   async deleteTest(id:number){
-    await this.answerRepository.delete({id})
+    await this.testRepository.delete({id})
   }
 }
