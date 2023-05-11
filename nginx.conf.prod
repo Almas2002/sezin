@@ -2,16 +2,19 @@ server {
      listen 80;
      listen [::]:80;
 
-     server_name 157.230.100.45;
+     server_name back-sezin.devup.kz;
      server_tokens off;
-
-      location / {
+     location ~ /.well-known/acme-challenge {
+                 allow all;
+                 root /var/www/html;
+     }
+     location / {
          add_header 'Access-Control-Allow-Origin' $http_origin;
          add_header 'Access-Control-Allow-Headers' 'x-requested-with, Content-Type, origin, authorization, accept, client-security-token';
          add_header 'Access-Control-Allow-Methods' 'GET,POST,OPTIONS,PUT,PATCH,DELETE';
          add_header 'Access-Control-Allow-Credentials' 'true';
          proxy_pass http://api:3000/;
 
-      }
+     }
 }
 

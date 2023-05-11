@@ -23,9 +23,20 @@ services:
     ports:
       - "80:80"
     volumes:
+      - www-html:/var/www/html
+      - etc-letsencrypt:/etc/letsencrypt
       - ./nginx.conf.prod:/etc/nginx/conf.d/nginx.conf
     depends_on:
       - api
+  certbot:
+    image: certbot/certbot:latest
+    container_name: certbot
+    depends_on:
+      - webserver
+    volumes:
+      - www-html:/var/www/html
+      - etc-letsencrypt:/etc/letsencrypt
+    command: certonly --webroot --webroot-path=/var/www/html --email almas@gmail.com  --agree-tos --no-eff-email -d back-sezin.devup.kz
 
 volumes:
   pgdata:
