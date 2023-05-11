@@ -33,4 +33,8 @@ export class TestService{
   async getTests(){
     return this.testRepository.find({relations:["answers"]});
   }
+
+  async deleteTest(id:number){
+    await this.answerRepository.delete({id})
+  }
 }

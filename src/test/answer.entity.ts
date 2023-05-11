@@ -9,6 +9,6 @@ export class Answer{
   title:string;
   @Column()
   score:number;
-  @ManyToOne(()=>Test,test=>test.answers)
+  @ManyToOne(()=>Test,test=>test.answers,{onDelete:"CASCADE"})
   test:Test
 }

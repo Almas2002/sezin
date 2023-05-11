@@ -7,6 +7,6 @@ export class Test {
   id: number;
   @Column()
   title: string;
-  @OneToMany(() => Answer, answer => answer.test)
+  @OneToMany(() => Answer, answer => answer.test,{onDelete:"CASCADE"})
   answers: Answer[];
 }
