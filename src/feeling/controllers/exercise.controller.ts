@@ -9,7 +9,6 @@ export class ExerciseController {
   constructor(private exerciseService: ExerciseService) {
   }
 
-  @Role("ADMIN")
   @UseInterceptors(FileInterceptor('image'))
   @Post()
   create(@Body()dto: CreateExercise, @UploadedFile()file) {
