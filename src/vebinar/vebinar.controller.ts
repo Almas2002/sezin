@@ -1,4 +1,15 @@
-import { Body, Controller, Get, Param, Post, Put, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { VebinarService } from './vebinar.service';
 import { CreateVebinarDto } from './vebinar.dto';
 import { UserDecorator } from '../decorators/user.decorator';
@@ -11,7 +22,8 @@ import { Role } from '../decorators/role.decorator';
 export class VebinarController {
   constructor(private vebinarService: VebinarService) {
   }
-  @Role("MANAGER")
+
+  @Role('MANAGER')
   @UseInterceptors(FileInterceptor('image'))
   @UseGuards(RoleGuards)
   @Post()
@@ -20,14 +32,14 @@ export class VebinarController {
   }
 
   @Get()
-  async getAll(){
-    return this.vebinarService.getAll()
+  async getAll(@Query('authorId')id: number) {
+    return this.vebinarService.getAll(id);
   }
 
-  @Role("MANAGER")
+  @Role('MANAGER')
   @UseGuards(RoleGuards)
-  @Put(":id")
-  buy(@Param('id')id:number,@UserDecorator('id')userId: number,){
-    return this.vebinarService.buy(id,userId)
+  @Put(':id')
+  buy(@Param('id')id: number, @UserDecorator('id')userId: number) {
+    return this.vebinarService.buy(id, userId);
   }
 }

@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { RoleService } from '../role/role.service';
 import { AddRoleDto } from './dto/add-role.dto';
 import { UserRegistrationDto } from '../auth/dto/user-registration.dto';
+import { QueryUsersDto } from './dto/query.users.dto';
 
 export class UserService {
   constructor(@InjectRepository(User) private userRepository: Repository<User>, private roleService: RoleService) {
@@ -77,9 +78,24 @@ export class UserService {
     return this.userRepository.findOne({ where: { id }, relations: ['roles', 'vebinars', 'bothVebinars'] });
   }
 
-  async getUsers() {
-    return this.userRepository.find({ relations: ['roles'] });
+  async getUsers(dto:QueryUsersDto) {
+    const limit = dto?.limit || 10
+    const page = dto?.page || 1
+    const offset = page * limit - limit
+    const query =  this.userRepository.createQueryBuilder("users")
+      .leftJoinAndSelect("users.roles","roles")
+
+    if(dto?.role){
+      query.andWhere("roles.value = :role",{role:dto.role})
+    }
+
+    query.limit(limit)
+    query.offset(offset)
+
+    const data = await query.getManyAndCount()
+    return {data:data[0],count:data[1]}
   }
+
 
   async buy(email: string) {
     const user = await this.userRepository.findOne({ where: { email } });

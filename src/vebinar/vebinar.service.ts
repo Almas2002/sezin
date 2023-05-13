@@ -17,15 +17,18 @@ export class VebinarService {
     return { id: vebinar.id };
   }
 
-  async getAll(){
-    return this.vebinarRepository.find({relations:["user","customers"]})
+  async getAll(authId: number) {
+    if (authId) {
+      return this.vebinarRepository.find({ where: { user: { id: authId } }, relations: ['user', 'customers'] });
+    }
+    return this.vebinarRepository.find({ relations: ['user', 'customers'] });
   }
 
-  async buy(vebinarId:number,userId:number){
-    const vebinar = await this.vebinarRepository.findOne({where:{id:vebinarId},relations:["customers"]})
-    const user = await this.userService.findUserById(userId)
-    vebinar.customers = [...vebinar.customers,user]
-    await this.vebinarRepository.save(vebinar)
+  async buy(vebinarId: number, userId: number) {
+    const vebinar = await this.vebinarRepository.findOne({ where: { id: vebinarId }, relations: ['customers'] });
+    const user = await this.userService.findUserById(userId);
+    vebinar.customers = [...vebinar.customers, user];
+    await this.vebinarRepository.save(vebinar);
   }
 
 
