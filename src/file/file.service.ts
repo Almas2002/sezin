@@ -1,22 +1,52 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { v4 } from 'uuid';
-import * as path from 'path';
-import * as fs from 'fs';
-
+import * as AWS from 'aws-sdk';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+require('dotenv').config()
 @Injectable()
 export class FileService {
-  async createFile(file): Promise<string> {
+  constructor() {
+  }
+
+  private bucket = process.env.DO_SPACE_BUCKET;
+  private endpoint = new AWS.Endpoint(process.env.DO_SPACE_ENDPOINT);
+  private s3 = new AWS.S3({
+    endpoint: this.endpoint,
+    secretAccessKey: process.env.DO_SPACE_SECRET_KEY, accessKeyId: process.env.DO_SPACE_ACCESS_KEY,
+  });
+
+  async createFile(file: any): Promise<string> {
     try {
-      const fileName = v4() + '.jpg';
-      const filePath = path.resolve(__dirname, '..', 'static');
-      if (!fs.existsSync(filePath)) {
-        fs.mkdirSync(filePath, { recursive: true });
-      }
-      fs.writeFileSync(path.join(filePath, fileName), file.buffer);
+      let fileName = v4();
+      const { originalname } = file;
+      const format = originalname.split('.');
+      fileName = fileName + '.' + format[format.length - 1];
+      await this.s3_upload(file.buffer, this.bucket, fileName, file.mimetype)
       return fileName;
     } catch (e) {
       console.log(e);
-      throw new HttpException('ошибка в созданий файла', 500);
+    }
+  }
+
+
+  private async s3_upload(file, bucket, name, mimeType) {
+    const params = {
+      Bucket: bucket,
+      Key: `${name}`,
+      Body: file,
+      ACL: 'public-read',
+      ContentType: mimeType,
+      ContentDisposition: 'inline',
+      CreateBucketConfiguration:
+        {
+          LocationConstraint: 'ap-south-1',
+        },
+    };
+    try {
+      await this.s3.upload(params).promise();
+    } catch (e) {
+      console.log(e);
     }
   }
 }

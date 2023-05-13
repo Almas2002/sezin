@@ -1,8 +1,9 @@
-import { Body, Controller, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ExerciseService } from '../services/exercise.service';
 import { CreateExercise } from '../dto/exercise.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Role } from '../../decorators/role.decorator';
+import { createEvalAwarePartialHost } from 'ts-node/dist/repl';
 
 @Controller('exercise')
 export class ExerciseController {
@@ -14,4 +15,9 @@ export class ExerciseController {
   create(@Body()dto: CreateExercise, @UploadedFile()file) {
     return this.exerciseService.create(dto, file);
   }
+  @Delete(':id')
+  deleteExercise(@Param('id')id:number){
+    return this.exerciseService.delete(id)
+  }
+
 }

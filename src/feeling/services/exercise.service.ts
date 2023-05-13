@@ -22,6 +22,10 @@ export class ExerciseService {
     return { id: article.id };
   }
 
+  async delete(id:number){
+    await this.exerciseRepository.delete({id})
+  }
+
 
 
 }
