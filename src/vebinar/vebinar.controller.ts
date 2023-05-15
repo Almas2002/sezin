@@ -44,6 +44,6 @@ export class VebinarController {
   }
   @Delete(':id')
   delete(@Param('id')id:number){
-
+      return  this.vebinarService.delete(id)
   }
 }
