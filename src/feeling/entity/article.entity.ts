@@ -7,7 +7,7 @@ export class Article{
   id:number;
   @Column()
   description:string;
-  @ManyToOne(()=>Feeling,feeling=>feeling)
+  @ManyToOne(()=>Feeling,feeling=>feeling,{onDelete:"CASCADE"})
   feeling:Feeling;
   @Column()
   title:string;

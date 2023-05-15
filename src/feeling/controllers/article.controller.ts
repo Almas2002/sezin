@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ArticleService } from '../services/article.service';
 import { CreateArticle } from '../dto/article.dto';
 import { RoleGuards } from '../../auth/guard/role.guard';
@@ -18,5 +18,8 @@ export class ArticleController {
   getArticle(){
     return this.articleService.getAll()
   }
+  @Delete(':id')
+  deleteById(@Param('id')id:number){
 
+  }
 }

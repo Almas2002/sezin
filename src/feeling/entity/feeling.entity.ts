@@ -12,10 +12,10 @@ export class Feeling{
   @Column()
   score:number;
 
-  @OneToMany(()=>Video,video=>video.feeling)
+  @OneToMany(()=>Video,video=>video.feeling,{onDelete:"CASCADE"})
   videos:Video[]
-  @OneToMany(()=>Article,article=>article.feeling)
+  @OneToMany(()=>Article,article=>article.feeling,{onDelete:"CASCADE"})
   articles: Article[]
-  @OneToMany(()=>Exercise,exercise=>exercise.feeling)
+  @OneToMany(()=>Exercise,exercise=>exercise.feeling,{onDelete:"CASCADE"})
   exercises:Exercise[]
 }

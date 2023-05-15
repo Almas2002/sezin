@@ -20,7 +20,11 @@ export class ArticleService {
     return { id: article.id };
   }
 
-  async getAll(){
-    return this.articleRepository.find()
+  async getAll() {
+    return this.articleRepository.find();
+  }
+
+  async delete(id: number) {
+    await this.articleRepository.delete({ id });
   }
 }
