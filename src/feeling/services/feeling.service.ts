@@ -27,12 +27,14 @@ export class FeelingService {
   async getAll(dto: QueryFeeling): Promise<{ data: Feeling[], count: number }> {
     const limit = dto?.limit || 10;
     const page = dto?.page || 1;
-    const offset = limit * page - limit;
+    const offset = page * limit - limit;
     const query = this.feelingRepository.createQueryBuilder('feeling')
       .leftJoinAndSelect('feeling.videos', 'videos')
       .leftJoinAndSelect('feeling.articles', 'articles')
       .leftJoinAndSelect('feeling.exercises', 'exercises');
-
+    if(dto?.score){
+      query.andWhere("feeling.score = :score",{score:dto.score})
+    }
     query.limit(limit);
     query.offset(offset);
 
