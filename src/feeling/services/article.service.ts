@@ -24,7 +24,5 @@ export class ArticleService {
     return this.articleRepository.find();
   }
 
-  async delete(id: number) {
-    await this.articleRepository.delete({ id });
-  }
+
 }

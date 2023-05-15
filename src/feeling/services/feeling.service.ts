@@ -39,4 +39,8 @@ export class FeelingService {
     return { data: data[0], count: data[1] };
   }
 
+  async delete(id: number) {
+    await this.feelingRepository.delete({ id });
+  }
+
 }

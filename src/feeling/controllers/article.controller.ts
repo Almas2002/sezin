@@ -18,8 +18,5 @@ export class ArticleController {
   getArticle(){
     return this.articleService.getAll()
   }
-  @Delete(':id')
-  deleteById(@Param('id')id:number){
 
-  }
 }
