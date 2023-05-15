@@ -7,12 +7,12 @@ export class Vebinar{
   id:number;
   @Column()
   title:string;
-  @ManyToOne(()=>User,user=>user)
+  @ManyToOne(()=>User,user=>user,{onDelete:"CASCADE"})
   user:User;
   @Column()
   image:string;
 
-  @ManyToMany(()=>User,user=>user.bothVebinars)
+  @ManyToMany(()=>User,user=>user.bothVebinars,{onDelete:"CASCADE"})
   @JoinTable()
   customers:User[]
 }

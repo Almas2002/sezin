@@ -31,5 +31,9 @@ export class VebinarService {
     await this.vebinarRepository.save(vebinar);
   }
 
+  async delete(id:number){
+    await this.vebinarRepository.delete({id})
+  }
+
 
 }

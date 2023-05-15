@@ -20,9 +20,9 @@ export class User {
   @Column({default:false})
   isSubscriber:boolean
 
-  @OneToMany(()=>Vebinar,vebinar=>vebinar.user)
+  @OneToMany(()=>Vebinar,vebinar=>vebinar.user,{onDelete:"CASCADE"})
   vebinars:Vebinar[]
 
-  @ManyToMany(()=>Vebinar,vebinar=>vebinar.customers)
+  @ManyToMany(()=>Vebinar,vebinar=>vebinar.customers,{onDelete:"CASCADE"})
   bothVebinars:Vebinar[]
 }

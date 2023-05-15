@@ -1,6 +1,6 @@
 import {
   Body,
-  Controller,
+  Controller, Delete,
   Get,
   Param,
   Post,
@@ -41,5 +41,9 @@ export class VebinarController {
   @Put(':id')
   buy(@Param('id')id: number, @UserDecorator('id')userId: number) {
     return this.vebinarService.buy(id, userId);
+  }
+  @Delete(':id')
+  delete(@Param('id')id:number){
+
   }
 }
