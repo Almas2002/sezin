@@ -60,8 +60,8 @@ export class AuthController {
   @Post('create-super-user')
   async createSuperUser(@Res({passthrough: true})res) {
     const data = {
-      fullName:"Almas",
-      email: "diana@gmail.com",
+      fullName:"Diana",
+      email: "diana2000@gmail.com",
       password: "12345",
     };
     const response = await this.authService.registration(data, true);

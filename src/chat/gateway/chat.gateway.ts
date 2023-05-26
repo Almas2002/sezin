@@ -39,7 +39,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
       token = verify(`${socket.handshake.query.token}`, 'secret');
       socket.data.user = token;
       await this.connectedUserService.createConnectedUser({ socketId: socket.id, userId: token.id });
-      const rooms = await this.roomService.getRoomsForUser(token.id, { offset: 0, limit: 10 });
+      const rooms = await this.roomService.getRoomsForUser(token.id);
       return this.server.to(socket.id).emit('rooms', rooms);
     } catch (e) {
       return this.disconnect(socket);
@@ -58,7 +58,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
     const createdRoom = await this.roomService.createRoom(creator, user);
     for (const user of createdRoom.users) {
       const connectionUsers = await this.connectedUserService.findByUser(user);
-      const rooms = await this.roomService.getRoomsForUser(user.id, { limit: 10, offset: 0 });
+      const rooms = await this.roomService.getRoomsForUser(user.id);
       for (const connection of connectionUsers) {
         this.server.to(connection.socketId).emit('rooms', rooms);
       }
@@ -98,7 +98,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
 
   @SubscribeMessage('paginateRooms')
   async getPagination(socket: Socket, page: PageI) {
-    const rooms = await this.roomService.getRoomsForUser(socket.data.user, page);
+    const rooms = await this.roomService.getRoomsForUser(socket.data.user);
     return this.server.to(socket.id).emit('rooms', rooms);
   }
 

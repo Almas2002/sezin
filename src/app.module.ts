@@ -12,6 +12,7 @@ import { TestQuestionModule } from './test/testQuestionModule';
 import { VebinarModule } from './vebinar/vebinar.module';
 import { FeedbackModule } from './feedback/feedback.module';
 import { ChatModule } from './chat/chat.module';
+import { ProfileModule } from './profile/profile.module';
 require('dotenv').config()
 
 @Module({
@@ -30,7 +31,7 @@ require('dotenv').config()
     ServeStaticModule.forRoot({
       rootPath: path.resolve(__dirname, 'static'),
     }),
-    UserModule, RoleModule, AuthModule, FileModule,FeelingModule,TestQuestionModule,VebinarModule,FeedbackModule,ChatModule],
+    UserModule, RoleModule, AuthModule, FileModule,FeelingModule,TestQuestionModule,VebinarModule,FeedbackModule,ChatModule,ProfileModule],
   controllers: [],
   providers: [],
 })

@@ -11,15 +11,13 @@ export class RoomService {
   constructor(@InjectRepository(Room) private roomRepository: Repository<Room>) {
   }
 
-  async getRoomsForUser(userId: number, option: PageI) {
+  async getRoomsForUser(userId: number) {
     const query = this.roomRepository
       .createQueryBuilder('room')
       .leftJoin('room.users', 'users')
       .where('users.id =:userId', { userId })
       .leftJoinAndSelect('room.users', 'all_users')
       .orderBy('room.updatedAt', 'DESC')
-      .limit(option.limit)
-      .offset(option.offset);
     return await query.getMany();
   }
 

@@ -6,9 +6,10 @@ import { RoleService } from '../role/role.service';
 import { AddRoleDto } from './dto/add-role.dto';
 import { UserRegistrationDto } from '../auth/dto/user-registration.dto';
 import { QueryUsersDto } from './dto/query.users.dto';
+import { ProfileService } from '../profile/profile.service';
 
 export class UserService {
-  constructor(@InjectRepository(User) private userRepository: Repository<User>, private roleService: RoleService) {
+  constructor(@InjectRepository(User) private userRepository: Repository<User>, private roleService: RoleService,private profileService:ProfileService) {
   }
 
   async create(dto: UserRegistrationDto, rol: string = 'ADMIN') {
@@ -19,6 +20,7 @@ export class UserService {
     const user = await this.userRepository.save({ ...dto });
     user.roles = [role];
     await this.userRepository.save(user);
+    await this.profileService.createProfile(user.id)
     delete user.password;
     return user;
   }

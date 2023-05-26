@@ -1,6 +1,7 @@
 import { Role } from '../role/role.entity';
-import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Vebinar } from '../vebinar/vebinar.entity';
+import { Profile } from '../profile/profile.entity';
 
 @Entity()
 export class User {
@@ -25,4 +26,7 @@ export class User {
 
   @ManyToMany(()=>Vebinar,vebinar=>vebinar.customers,{onDelete:"CASCADE"})
   bothVebinars:Vebinar[]
+
+  @OneToOne(()=>Profile)
+  profile:Profile
 }
