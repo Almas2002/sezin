@@ -89,6 +89,7 @@ export class UserService {
 
     if(dto?.role){
       query.andWhere("roles.value = :role",{role:dto.role})
+      query.leftJoinAndSelect("users.vebinars","vebinars")
     }
 
     query.limit(limit)
