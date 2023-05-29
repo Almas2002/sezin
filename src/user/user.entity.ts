@@ -3,30 +3,39 @@ import { Column, Entity, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn
 import { Vebinar } from '../vebinar/vebinar.entity';
 import { Profile } from '../profile/profile.entity';
 
+
+export enum userStatus {
+  EXCELLENT = 'отлично',
+  SATISFACTORY = 'удавлитворитно',
+  NOTBAD = 'неплохо',
+  BAD = 'плохо',
+  CRITICAL = 'критично'
+}
+
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
   @Column()
   email: string;
-  @Column({default:""})
-  fullName:string;
+  @Column({ default: '' })
+  fullName: string;
   @Column({ select: false })
   password: string;
-  @Column({default:0})
-  score:number
+  @Column({ default: 0 })
+  score: number;
   @ManyToMany(() => Role, role => role.users)
   roles: Role[];
 
-  @Column({default:false})
-  isSubscriber:boolean
+  @Column({ default: false })
+  isSubscriber: boolean;
 
-  @OneToMany(()=>Vebinar,vebinar=>vebinar.user,{onDelete:"CASCADE"})
-  vebinars:Vebinar[]
+  @OneToMany(() => Vebinar, vebinar => vebinar.user, { onDelete: 'CASCADE' })
+  vebinars: Vebinar[];
 
-  @ManyToMany(()=>Vebinar,vebinar=>vebinar.customers,{onDelete:"CASCADE"})
-  bothVebinars:Vebinar[]
+  @ManyToMany(() => Vebinar, vebinar => vebinar.customers, { onDelete: 'CASCADE' })
+  bothVebinars: Vebinar[];
 
-  @OneToOne(()=>Profile,profile=>profile.user)
-  profile:Profile
+  @OneToOne(() => Profile, profile => profile.user)
+  profile: Profile;
 }

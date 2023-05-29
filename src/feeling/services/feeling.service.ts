@@ -35,8 +35,17 @@ export class FeelingService {
     }
 
 
-    const data = await query.getManyAndCount();
-    return { data: data[0], count: data[1] };
+    let data = await query.getManyAndCount();
+    if (data[0].length){
+      return { data: data[0], count: data[1] };
+    }
+    const rand = await this.feelingRepository.createQueryBuilder('feeling')
+      .leftJoinAndSelect('feeling.videos', 'videos')
+      .leftJoinAndSelect('feeling.articles', 'articles')
+      .leftJoinAndSelect('feeling.exercises', 'exercises')
+      .orderBy('RANDOM()')
+      .getMany()
+    return { data: [rand[0]] , count: 1 };
   }
 
   async delete(id: number) {
