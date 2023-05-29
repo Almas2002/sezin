@@ -23,8 +23,8 @@ export class UserController {
     return this.userService.getUserId(id);
   }
 
-  @Role('ADMIN')
-  @UseGuards(RoleGuards)
+  // @Role('ADMIN')
+  // @UseGuards(RoleGuards)
   @Post('add-role')
   addRole(@Body()dto: AddRoleDto) {
     return this.userService.addRoleWithEmail(dto.role, dto.email);

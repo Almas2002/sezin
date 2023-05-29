@@ -50,6 +50,9 @@ export class UserService {
 
   async addRoleWithEmail(roleValue: string, email: string) {
     const user = await this.getUserByEmail(email);
+    if(!user){
+      throw new HttpException("not found",404)
+    }
     await this.addRole(roleValue, user.id);
   }
 
@@ -92,9 +95,6 @@ export class UserService {
       query.leftJoinAndSelect("users.profile","profile")
       query.leftJoinAndSelect("users.vebinars","vebinars")
     }
-
-    query.limit(limit)
-    query.offset(offset)
 
     const data = await query.getManyAndCount()
     return {data:data[0],count:data[1]}
