@@ -27,6 +27,6 @@ export class User {
   @ManyToMany(()=>Vebinar,vebinar=>vebinar.customers,{onDelete:"CASCADE"})
   bothVebinars:Vebinar[]
 
-  @OneToOne(()=>Profile)
+  @OneToOne(()=>Profile,profile=>profile.user)
   profile:Profile
 }

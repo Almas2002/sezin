@@ -14,7 +14,7 @@ export class Profile {
   smallDesc: string;
   @Column({nullable:true})
   desc: string;
-  @OneToOne(()=>User)
+  @OneToOne(()=>User,user=>user.profile)
   @JoinColumn({name:"user_id"})
   user:User
 }
