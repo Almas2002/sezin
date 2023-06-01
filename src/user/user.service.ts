@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Inject } from '@nestjs/common';
+import { HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
@@ -7,9 +7,11 @@ import { AddRoleDto } from './dto/add-role.dto';
 import { UserRegistrationDto } from '../auth/dto/user-registration.dto';
 import { QueryUsersDto } from './dto/query.users.dto';
 import { ProfileService } from '../profile/profile.service';
+import { ExerciseStatus, UserExerciseEntity } from './user-exercise.entity';
 
 export class UserService {
-  constructor(@InjectRepository(User) private userRepository: Repository<User>, private roleService: RoleService,private profileService:ProfileService) {
+  constructor(@InjectRepository(User) private userRepository: Repository<User>, @InjectRepository(UserExerciseEntity) private exercise: Repository<UserExerciseEntity>,
+              private roleService: RoleService, private profileService: ProfileService) {
   }
 
   async create(dto: UserRegistrationDto, rol: string = 'ADMIN') {
@@ -20,7 +22,7 @@ export class UserService {
     const user = await this.userRepository.save({ ...dto });
     user.roles = [role];
     await this.userRepository.save(user);
-    await this.profileService.createProfile(user.id)
+    await this.profileService.createProfile(user.id);
     delete user.password;
     return user;
   }
@@ -50,8 +52,8 @@ export class UserService {
 
   async addRoleWithEmail(roleValue: string, email: string) {
     const user = await this.getUserByEmail(email);
-    if(!user){
-      throw new HttpException("not found",404)
+    if (!user) {
+      throw new HttpException('not found', 404);
     }
     await this.addRole(roleValue, user.id);
   }
@@ -75,8 +77,8 @@ export class UserService {
 
   async updateScore(id: number, score: number) {
     const user = await this.userRepository.findOne({ where: { id } });
-    if(score == 0 || score >= 9)
-    user.score = score;
+    if (score == 0 || score >= 9)
+      user.score = score;
     await this.userRepository.save(user);
   }
 
@@ -84,21 +86,24 @@ export class UserService {
     return this.userRepository.findOne({ where: { id }, relations: ['roles', 'vebinars', 'bothVebinars'] });
   }
 
-  async getUsers(dto:QueryUsersDto) {
-    const limit = dto?.limit || 10
-    const page = dto?.page || 1
-    const offset = page * limit - limit
-    const query =  this.userRepository.createQueryBuilder("users")
-      .leftJoinAndSelect("users.roles","roles")
+  async getCount(id: number) {
+    const processingCount = await this.exercise.count({ where: { status: ExerciseStatus.ISPROCESSING, user: { id } } });
+    const endCount = await this.exercise.count({ where: { status: ExerciseStatus.END, user: { id } } });
+    return { processingCount, endCount };
+  }
 
-    if(dto?.role){
-      query.andWhere("roles.value = :role",{role:dto.role})
-      query.leftJoinAndSelect("users.profile","profile")
-      query.leftJoinAndSelect("users.vebinars","vebinars")
+  async getUsers(dto: QueryUsersDto) {
+    const query = this.userRepository.createQueryBuilder('users')
+      .leftJoinAndSelect('users.roles', 'roles');
+
+    if (dto?.role) {
+      query.andWhere('roles.value = :role', { role: dto.role });
+      query.leftJoinAndSelect('users.profile', 'profile');
+      query.leftJoinAndSelect('users.vebinars', 'vebinars');
     }
 
-    const data = await query.getManyAndCount()
-    return {data:data[0],count:data[1]}
+    const data = await query.getManyAndCount();
+    return { data: data[0], count: data[1] };
   }
 
 
@@ -106,5 +111,25 @@ export class UserService {
     const user = await this.userRepository.findOne({ where: { email } });
     user.isSubscriber = true;
     await this.userRepository.save(user);
+  }
+
+  async start(id: number, userId: number) {
+    const exercise = await this.exercise.findOne({
+      where: {
+        exercise: { id },
+        user: { id: userId },
+        status: ExerciseStatus.ISPROCESSING,
+      },
+    });
+    if (exercise) {
+      return;
+    }
+    await this.exercise.save({ status: ExerciseStatus.ISPROCESSING, exercise: { id }, user: { id: userId } });
+  }
+
+  async end(id: number, userId: number) {
+    const exercise = await this.exercise.findOne({ where: { exercise: { id }, user: { id: userId } } });
+    exercise.status = ExerciseStatus.END;
+    await this.exercise.save(exercise);
   }
 }

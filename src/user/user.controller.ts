@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { AuthGuard } from '../auth/guard/auth.guard';
 import { UserDecorator } from '../decorators/user.decorator';
@@ -6,6 +6,7 @@ import { RoleGuards } from '../auth/guard/role.guard';
 import { Role } from '../decorators/role.decorator';
 import { AddRoleDto } from './dto/add-role.dto';
 import { QueryUsersDto } from './dto/query.users.dto';
+import { Auth } from '../auth/auth.entity';
 
 @Controller('user')
 export class UserController {
@@ -38,5 +39,23 @@ export class UserController {
   @Put('/buy')
   async buy(@Body('email')email: string) {
     return this.userService.buy(email);
+  }
+
+  @UseGuards(AuthGuard)
+  @Put('exercise/start/:id')
+  start(@Param('id')id: number, @UserDecorator('id')userId: number) {
+    return this.userService.start(id, userId);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/count')
+  count(@UserDecorator('id')userId: number) {
+    return this.userService.getCount(userId);
+  }
+
+  @UseGuards(AuthGuard)
+  @Put('exercise/end/:id')
+  end(@Param('id')id: number, @UserDecorator('id')userId: number) {
+    return this.userService.end(id, userId);
   }
 }

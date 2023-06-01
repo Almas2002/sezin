@@ -2,15 +2,9 @@ import { Role } from '../role/role.entity';
 import { Column, Entity, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Vebinar } from '../vebinar/vebinar.entity';
 import { Profile } from '../profile/profile.entity';
+import { ExerciseStatus, UserExerciseEntity } from './user-exercise.entity';
+import { Exercise } from '../feeling/entity/exercise.entity';
 
-
-export enum userStatus {
-  EXCELLENT = 'отлично',
-  SATISFACTORY = 'удавлитворитно',
-  NOTBAD = 'неплохо',
-  BAD = 'плохо',
-  CRITICAL = 'критично'
-}
 
 @Entity()
 export class User {
@@ -38,4 +32,7 @@ export class User {
 
   @OneToOne(() => Profile, profile => profile.user)
   profile: Profile;
+
+  @OneToMany(()=>UserExerciseEntity,exercise=>exercise.exercise)
+  exercises:UserExerciseEntity[]
 }
