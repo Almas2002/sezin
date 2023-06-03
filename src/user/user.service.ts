@@ -132,4 +132,8 @@ export class UserService {
     exercise.status = ExerciseStatus.END;
     await this.exercise.save(exercise);
   }
+
+  async deleteUser(id:number){
+    await this.userRepository.delete({id})
+  }
 }

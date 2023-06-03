@@ -12,9 +12,9 @@ export enum ExerciseStatus {
 export class UserExerciseEntity {
   @PrimaryGeneratedColumn()
   id: number;
-  @ManyToOne(()=>Exercise,exercise=>exercise)
+  @ManyToOne(()=>Exercise,exercise=>exercise,{onDelete:"CASCADE"})
   exercise: Exercise;
-  @ManyToOne(()=>User,user=>user)
+  @ManyToOne(()=>User,user=>user,{onDelete:"CASCADE"})
   user: User;
   @Column({type:'enum',enum:ExerciseStatus,default:ExerciseStatus.DEFAULT})
   status: ExerciseStatus

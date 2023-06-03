@@ -8,7 +8,7 @@ export class Message {
     id: number;
     @Column()
     text: string;
-    @ManyToOne(() => User, user => user, {nullable: false})
+    @ManyToOne(() => User, user => user, {nullable: false,onDelete:"CASCADE"})
     user: User;
     @ManyToOne(() => Room, room => room.messages, {nullable: false})
     room: Room

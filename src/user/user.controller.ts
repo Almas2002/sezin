@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { AuthGuard } from '../auth/guard/auth.guard';
 import { UserDecorator } from '../decorators/user.decorator';
@@ -7,6 +7,7 @@ import { Role } from '../decorators/role.decorator';
 import { AddRoleDto } from './dto/add-role.dto';
 import { QueryUsersDto } from './dto/query.users.dto';
 import { Auth } from '../auth/auth.entity';
+import { audit } from 'rxjs';
 
 @Controller('user')
 export class UserController {
@@ -57,5 +58,10 @@ export class UserController {
   @Put('exercise/end/:id')
   end(@Param('id')id: number, @UserDecorator('id')userId: number) {
     return this.userService.end(id, userId);
+  }
+
+  @Delete(':id')
+  delete(@Param('id')id: number) {
+    return this.userService.deleteUser(id);
   }
 }

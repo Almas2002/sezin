@@ -14,7 +14,7 @@ export class Profile {
   smallDesc: string;
   @Column({nullable:true})
   desc: string;
-  @OneToOne(()=>User,user=>user.profile)
+  @OneToOne(()=>User,user=>user.profile,{onDelete:"CASCADE"})
   @JoinColumn({name:"user_id"})
   user:User
 }

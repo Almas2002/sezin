@@ -6,7 +6,7 @@ import { User } from '../../../user/user.entity';
 export class ConnectedUser {
     @PrimaryGeneratedColumn()
     id: number;
-    @ManyToOne(() => User, user => user)
+    @ManyToOne(() => User, user => user,{onDelete:"CASCADE"})
     user: User;
     @Column()
     socketId: string;

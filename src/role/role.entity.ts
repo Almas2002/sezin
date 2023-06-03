@@ -10,7 +10,7 @@ export class Role {
   value:string;
   @Column()
   description:string;
-  @ManyToMany(()=>User,user=>user.roles)
+  @ManyToMany(()=>User,user=>user.roles,{onDelete:"CASCADE"})
   @JoinTable()
   users:User[]
 }
