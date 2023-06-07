@@ -14,6 +14,7 @@ export class ArticleController {
   create(@Body()dto:CreateArticle){
     return this.articleService.create(dto)
   }
+
   @Get()
   getArticle(){
     return this.articleService.getAll()

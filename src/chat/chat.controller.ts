@@ -11,16 +11,18 @@ import { User } from '../user/user.entity';
 export class ChatController{
   constructor(private messageService:MessageService,private roomService:RoomService) {}
 
-  @Get("/:id")
-  getMessage(@Param('id')id:number,@Query()query:PageI){
-    return this.messageService.getAllMessage(id,query)
-  }
-
   @UseGuards(AuthGuard)
   @Get("room")
   getRooms(@UserDecorator('id')id:number){
     return this.roomService.getRoomsForUser(id)
   }
+
+  @Get("/:id")
+  getMessage(@Param('id')id:number,@Query()query:PageI){
+    return this.messageService.getAllMessage(id,query)
+  }
+
+
   @UseGuards(AuthGuard)
   @Post('room')
   createRoom(@UserDecorator()creator: User,@Body('id')userId:number){

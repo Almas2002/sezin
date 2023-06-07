@@ -77,7 +77,6 @@ export class UserService {
 
   async updateScore(id: number, score: number) {
     const user = await this.userRepository.findOne({ where: { id } });
-    if (score == 0 || score >= 9)
       user.score = score;
     await this.userRepository.save(user);
   }

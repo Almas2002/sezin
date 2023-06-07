@@ -10,8 +10,7 @@ import * as bcrypt from "bcrypt"
 import { UserRegistrationDto } from './dto/user-registration.dto';
 require("dotenv").config()
 export class AuthService {
-  constructor(@InjectRepository(Auth) private authRepository: Repository<Auth>, private jwtService: JwtService, private userService: UserService) {
-  }
+  constructor(@InjectRepository(Auth) private authRepository: Repository<Auth>, private jwtService: JwtService, private userService: UserService) {}
 
   private generationToken(user: User) {
     const payload = { id: user.id };
@@ -56,12 +55,12 @@ export class AuthService {
     const user = await this.userService.getUserByEmail(dto.email);
     const errors = {};
     if (!user) {
-      errors['phone'] = ['Некорректный телефон номер'];
+      errors['email'] = ['Некорректный телефон номер'];
       throw new HttpException({ errors }, HttpStatus.UNPROCESSABLE_ENTITY);
     }
     const campfirePassword = await bcrypt.compare(dto.password, user.password);
     if (!campfirePassword) {
-      errors['password'] = ['Некорректный пороль'];
+      errors['password'] = ['Некорректный пaроль'];
       throw new HttpException({ errors }, HttpStatus.UNPROCESSABLE_ENTITY);
     }
     return user;
