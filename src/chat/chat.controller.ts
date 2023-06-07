@@ -26,7 +26,9 @@ export class ChatController{
   @UseGuards(AuthGuard)
   @Post('room')
   createRoom(@UserDecorator()creator: User,@Body('id')userId:number){
-    return this.roomService.createRoom(creator,{id:userId,...creator})
+    let body = {...creator}
+    body.id = userId
+    return this.roomService.createRoom(creator,body)
   }
 
 }
