@@ -1,11 +1,11 @@
 import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
-import { ChatService } from './service/chat.service';
 import { MessageService } from './service/message/message.service';
 import { PageI } from './model/page.interface';
 import { AuthGuard } from '../auth/guard/auth.guard';
 import { UserDecorator } from '../decorators/user.decorator';
 import { RoomService } from './service/room/room.service';
 import { User } from '../user/user.entity';
+import { log } from 'util';
 
 @Controller('chat')
 export class ChatController{
@@ -28,6 +28,7 @@ export class ChatController{
   createRoom(@UserDecorator()creator: User,@Body('id')userId:number){
     let body = {...creator}
     body.id = userId
+    console.log(body);
     return this.roomService.createRoom(creator,body)
   }
 

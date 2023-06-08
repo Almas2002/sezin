@@ -19,7 +19,7 @@ import { JoinedRoom } from '../model/joined-room/joined-room.entity';
 import { JointedRoomService } from '../service/joined-room/jointed-room.service';
 import { PageI } from '../model/page.interface';
 
-@WebSocketGateway({ namespace: '/', })
+@WebSocketGateway({ namespace: '/',cors:true })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, OnModuleInit {
   constructor(private connectedUserService: ConnectedUserService
     , private roomService: RoomService, private userService: UserService, private messageService: MessageService,
@@ -42,6 +42,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
       const rooms = await this.roomService.getRoomsForUser(token.id);
       return this.server.to(socket.id).emit('rooms', rooms);
     } catch (e) {
+      console.log(e);
       return this.disconnect(socket);
     }
   }
@@ -53,15 +54,19 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
 
   @SubscribeMessage('create-room')
   async createRoom(socket: Socket, data) {
-    const creator: User = await this.userService.findUserById(socket.data.user.id);
-    const user = await this.userService.getUserByEmail(data.email);
-    const createdRoom = await this.roomService.createRoom(creator, user);
-    for (const user of createdRoom.users) {
-      const connectionUsers = await this.connectedUserService.findByUser(user);
-      const rooms = await this.roomService.getRoomsForUser(user.id);
-      for (const connection of connectionUsers) {
-        this.server.to(connection.socketId).emit('rooms', rooms);
+    try {
+      const creator: User = await this.userService.findUserById(socket.data.user.id);
+      const user = await this.userService.getUserByEmail(data.email);
+      const createdRoom = await this.roomService.createRoom(creator, user);
+      for (const user of createdRoom.users) {
+        const connectionUsers = await this.connectedUserService.findByUser(user);
+        const rooms = await this.roomService.getRoomsForUser(user.id);
+        for (const connection of connectionUsers) {
+          this.server.to(connection.socketId).emit('rooms', rooms);
+        }
       }
+    }catch (e){
+      console.log(e);
     }
   }
 
@@ -80,7 +85,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
 
   @SubscribeMessage('join-room')
   async joinRoom(socket: Socket, id: { data: number }) {
-
+    console.log(id);
     const messages = await this.messageService.getAllMessage(id.data, { limit: 10, offset: 0 });
     await this.jointedRoomService.create({ socketId: socket.id, roomId: id.data, user: socket.data.user });
     await this.server.to(socket.id).emit('messages', messages);
