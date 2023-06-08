@@ -19,7 +19,7 @@ import { JoinedRoom } from '../model/joined-room/joined-room.entity';
 import { JointedRoomService } from '../service/joined-room/jointed-room.service';
 import { PageI } from '../model/page.interface';
 
-@WebSocketGateway({ namespace: '/',cors:true })
+@WebSocketGateway({ namespace: '/'})
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, OnModuleInit {
   constructor(private connectedUserService: ConnectedUserService
     , private roomService: RoomService, private userService: UserService, private messageService: MessageService,
